@@ -22,7 +22,10 @@ Papa.parse(file, {
     complete: (result, file) => {
         initalValues = InitVariables(unfilteredData); // values used in the start of it
         //console.log(math.multiply(initalValues.X, initalValues.theta));
-        gradientDescent(initalValues.theta,initalValues.X,initalValues.y,0.03,1000);
+        initalValues.X = math.concat(math.ones(1460,1), normalizeData(initalValues.X));
+        //initalValues.theta = gradientDescent(initalValues.theta,initalValues.X,initalValues.y,1,10);
+        initalValues.theta = normalEqt(initalValues.X, initalValues.y);
+        console.log(`Theta Values are now ${initalValues.theta}`);
     }
 })
 
@@ -32,7 +35,7 @@ const InitVariables = data => {
     let features = [];
     let output = [];
     data.forEach(element => {
-        features.push([1, parseInt(element.data[19])]); 
+        features.push([parseInt(element.data[19])]); 
         output.push([parseInt(element.data[element.data.length-1])]);
     });
     features.shift();
@@ -59,9 +62,24 @@ const gradientDescent = (theta, X, y, alpha,iterations) => {
     let optimizedTheta = theta;
     for(var i=0; i < iterations; ++i) {
         let predictions = math.multiply(X, optimizedTheta);
-        console.log(math.dotMultiply(math.subtract(predictions,y),X));
-        //optimizedTheta = math.subtract(optimizedTheta, math,multiply(alpha*(1/m), hypoSum));
-        console.log(`${i} iteration | cost = ${computeCost(optimizedTheta,X,y)}`);
+        let derivedError = math.subtract(predictions,y);
+        let firstThetaRow = math.multiply((1/m),math.sum(math.dotMultiply(derivedError,math.column(X,0))));
+        let secondThetaRow = math.multiply((1/m),math.sum(math.dotMultiply(derivedError,math.column(X,1))));
+        optimizedTheta = math.subtract(optimizedTheta, math.multiply(alpha, math.matrix([[firstThetaRow],[secondThetaRow]])));
+        //console.log(`X's first column is ${math.column(X,1)}`)
+        //console.log(`first theta is ${firstThetaRow}, second theta is ${secondThetaRow}`)
+        //console.log(`${i+1} iteration | cost = ${computeCost(optimizedTheta,X,y)}`);
     }
     return optimizedTheta;
+}
+
+// Function that normalizes the data when put through
+const normalizeData = X => {
+    let mean = math.mean(math.column(X,0));
+    let std = math.std(math.column(X,0));
+    return math.dotDivide(math.subtract(X,mean),std);
+}
+
+const normalEqt = (X,y) => {
+    return math.multiply(math.inv(math.multiply(math.transpose(X),X)), math.multiply(math.transpose(X),y));
 }
