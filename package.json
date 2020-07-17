@@ -1,0 +1,27 @@
+{
+  "name": "simple_ml_with_js",
+  "version": "1.0.0",
+  "description": "Using Javascript to implement Linear Regression and Classification",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WildcherryBazzaire/Simple_ML_With_JS.git"
+  },
+  "keywords": [
+    "Machine",
+    "Learning"
+  ],
+  "author": "Alex McCrary",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WildcherryBazzaire/Simple_ML_With_JS/issues"
+  },
+  "homepage": "https://github.com/WildcherryBazzaire/Simple_ML_With_JS#readme",
+  "dependencies": {
+    "mathjs": "^7.1.0",
+    "papaparse": "^5.2.0"
+  }
+}
